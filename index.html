@@ -468,40 +468,36 @@
           <small style="color:#666">Then fill your Transaction ID below ↓</small>
         </div>
 
-        <div class="form-group">
-          <label>Your Full Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Rahim Ahmed" />
-        </div>
-        <div class="form-group">
-          <label>Your Phone Number *</label>
-          <input type="tel" id="custPhone" placeholder="01XXXXXXXXX" />
-        </div>
-        <div class="form-group">
-          <label>Delivery Address (if physical product)</label>
-          <textarea id="custAddress" placeholder="House, Road, Area, City..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>bKash Transaction ID *</label>
-          <input type="text" id="txnId" placeholder="e.g. 8AB12CD34E" style="letter-spacing:1px" />
-        </div>
-        <div class="form-group">
-          <label>Any Special Note</label>
-          <input type="text" id="custNote" placeholder="Optional..." />
-        </div>
-        <button class="submit-btn" onclick="submitOrder()">✓ Confirm Order</button>
-      </div>
+      <form action="https://formspree.io/f/xqabogjy" method="POST">
 
-      <div class="success-screen" id="successScreen">
-        <div class="success-icon">🎉</div>
-        <h2>Order Placed!</h2>
-        <div class="order-id" id="orderIdDisplay"></div>
-        <p>We will verify your bKash payment and contact you shortly.<br><br>
-        Please save your Order ID for tracking.</p>
-        <button class="submit-btn" onclick="closeModal()" style="margin-top:20px">Close</button>
-      </div>
-    </div>
+  <div class="form-group">
+    <label>Your Full Name *</label>
+    <input type="text" id="custName" name="name" placeholder="e.g. Rahim Ahmed" required />
   </div>
-</div>
+
+  <div class="form-group">
+    <label>Your Phone Number *</label>
+    <input type="tel" id="custPhone" name="phone" placeholder="01XXXXXXXXX" required />
+  </div>
+
+  <div class="form-group">
+    <label>Delivery Address (if physical product)</label>
+    <textarea id="custAddress" name="address" placeholder="House, Road, Area, City..."></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>bKash Transaction ID *</label>
+    <input type="text" id="txnId" name="transaction_id" placeholder="e.g. 8AB12CD34E" style="letter-spacing:1px" required />
+  </div>
+
+  <div class="form-group">
+    <label>Any Special Note</label>
+    <input type="text" id="custNote" name="note" placeholder="Optional..." />
+  </div>
+
+  <button type="submit" class="submit-btn">✓ Confirm Order</button>
+
+</form>
 
 <script>
 // ============================================
