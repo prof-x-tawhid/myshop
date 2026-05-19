@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyShop — Order with bKash</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Noto+Sans+Bengali:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #E2136E;
+    --pink-dark: #b50d56;
+    --pink-light: #fce4ef;
+    --bg: #fff9fb;
+    --dark: #1a0a10;
+    --gray: #6b7280;
+    --border: #f0d6e0;
+    --card: #ffffff;
+    --success: #10b981;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--pink);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(226,19,110,0.3);
+  }
+  .nav-logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { opacity: 0.7; font-weight: 300; }
+  .nav-bkash {
+    background: white;
+    color: var(--pink);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--pink) 0%, #ff6b9d 100%);
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    top: -100px; right: -100px;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 250px; height: 250px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    bottom: -50px; left: -50px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    color: white;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.85);
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .bkash-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--pink);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .bkash-badge::before {
+    content: '💳';
+    font-size: 18px;
+  }
+
+  /* SECTION */
+  .section { padding: 48px 24px; max-width: 1000px; margin: 0 auto; }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+  }
+
+  /* PRODUCTS */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .product-card {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(226,19,110,0.15);
+  }
+  .product-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    background: var(--pink-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+  }
+  .product-info { padding: 16px; }
+  .product-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .product-desc {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .product-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pink);
+  }
+  .product-price span { font-size: 12px; font-weight: 400; color: var(--gray); }
+  .order-btn {
+    background: var(--pink);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .order-btn:hover { background: var(--pink-dark); transform: scale(1.05); }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .step {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    background: var(--pink);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 auto 12px;
+  }
+  .step h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .step p { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,10,16,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-header {
+    background: var(--pink);
+    padding: 20px 24px;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-header h2 { color: white; font-size: 18px; font-weight: 700; }
+  .modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-body { padding: 24px; }
+
+  .selected-product {
+    background: var(--pink-light);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .selected-product-emoji { font-size: 32px; }
+  .selected-product-name { font-weight: 600; font-size: 15px; }
+  .selected-product-price { color: var(--pink); font-weight: 700; font-size: 18px; }
+
+  .bkash-instruction {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .bkash-instruction strong { color: var(--pink); font-size: 15px; }
+  .bkash-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pink);
+    letter-spacing: 1px;
+    display: block;
+    margin: 6px 0;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--dark);
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Sora', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    background: white;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--pink);
+  }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--pink);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--pink-dark); transform: scale(1.01); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .success-screen.show { display: block; }
+  .success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  .success-screen h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .success-screen p { color: var(--gray); font-size: 14px; line-height: 1.6; }
+  .order-id {
+    background: var(--pink-light);
+    color: var(--pink);
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-block;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  footer strong { color: white; }
+
+  /* ADMIN LINK */
+  .admin-bar {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+  }
+  .admin-bar a {
+    color: var(--pink);
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<div class="admin-bar">
+  Shop Owner? <a href="admin.html" target="_blank">Go to Admin Panel →</a>
+</div>
+
+<nav>
+  <div class="nav-logo" id="navLogo">My<span>Shop</span></div>
+  <div class="nav-bkash">✓ bKash Accepted</div>
+</nav>
+
+<div class="hero">
+  <h1 id="heroTitle">Shop & Pay with bKash</h1>
+  <p id="heroSubtitle">Browse products, send bKash, get your order delivered</p>
+  <div class="bkash-badge">Payments via bKash — Fast & Easy</div>
+</div>
+
+<div class="section">
+  <div class="section-title">🛍️ Our Products</div>
+  <div class="products-grid" id="productsGrid"></div>
+</div>
+
+<div class="section">
+  <div class="section-title">📋 How to Order</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Pick a Product</h3>
+      <p>Browse our products and click "Order Now"</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Send bKash</h3>
+      <p>Send the payment to our bKash number</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Fill the Form</h3>
+      <p>Enter your info and bKash Transaction ID</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Get Delivery</h3>
+      <p>We confirm and deliver your order</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong id="footerShopName">MyShop</strong> — Powered by bKash Payments<br>
+  <span style="font-size:11px">For support, contact us on WhatsApp or Facebook</span>
+</footer>
+
+<!-- ORDER MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Place Your Order</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div id="orderForm">
+        <div class="selected-product" id="selectedProductInfo"></div>
+
+        <div class="bkash-instruction">
+          <strong>💳 Send bKash Payment First</strong><br>
+          Send <span id="payAmount" style="font-weight:700"></span> to:<br>
+          <span class="bkash-number" id="bkashNum">01XXXXXXXXX</span>
+          (Send Money / Personal)<br>
+          <small style="color:#666">Then fill your Transaction ID below ↓</small>
+        </div>
+
+        <div class="form-group">
+          <label>Your Full Name *</label>
+          <input type="text" id="custName" placeholder="e.g. Rahim Ahmed" />
+        </div>
+        <div class="form-group">
+          <label>Your Phone Number *</label>
+          <input type="tel" id="custPhone" placeholder="01XXXXXXXXX" />
+        </div>
+        <div class="form-group">
+          <label>Delivery Address (if physical product)</label>
+          <textarea id="custAddress" placeholder="House, Road, Area, City..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>bKash Transaction ID *</label>
+          <input type="text" id="txnId" placeholder="e.g. 8AB12CD34E" style="letter-spacing:1px" />
+        </div>
+        <div class="form-group">
+          <label>Any Special Note</label>
+          <input type="text" id="custNote" placeholder="Optional..." />
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
+          <span class="spinner" id="spinner"></span>
+          <span id="submitBtnText">✓ Confirm Order</span>
+        </button>
+      </div>
+
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">🎉</div>
+        <h2>Order Placed!</h2>
+        <div class="order-id" id="orderIdDisplay"></div>
+        <p>We will verify your bKash payment and contact you shortly.<br><br>
+        Please save your Order ID for tracking.</p>
+        <button class="submit-btn" onclick="closeModal()" style="margin-top:20px">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// SHOP CONFIGURATION — EDIT THIS SECTION
+// ============================================
+const SHOP_CONFIG = {
+  shopName: "MyShop",
+  bkashNumber: "01XXXXXXXXX",  // ← PUT YOUR BKASH NUMBER HERE
+  currency: "৳",
+  formspreeUrl: "https://formspree.io/f/xqabogjy"  // ← Your Formspree endpoint
+};
+
+const PRODUCTS = [
+  { id: 1, name: "Product One",   desc: "Short description of your product goes here.", price: 299,  emoji: "👟" },
+  { id: 2, name: "Product Two",   desc: "Another product description. Tell customers what it is.", price: 599,  emoji: "👜" },
+  { id: 3, name: "Product Three", desc: "Describe this product and why customers will love it.", price: 149,  emoji: "🎧" },
+  { id: 4, name: "Product Four",  desc: "Add more products by editing the PRODUCTS array above.", price: 999,  emoji: "⌚" }
+];
+// ============================================
+
+// Apply config to page
+document.getElementById('bkashNum').textContent = SHOP_CONFIG.bkashNumber;
+document.getElementById('navLogo').innerHTML = SHOP_CONFIG.shopName.slice(0,-4) + '<span>' + SHOP_CONFIG.shopName.slice(-4) + '</span>';
+document.getElementById('footerShopName').textContent = SHOP_CONFIG.shopName;
+
+// Load settings from localStorage if admin has saved them
+const savedSettings = JSON.parse(localStorage.getItem('shop_settings') || 'null');
+if (savedSettings) {
+  if (savedSettings.shopName) {
+    document.getElementById('navLogo').innerHTML = savedSettings.shopName.slice(0,-4) + '<span>' + savedSettings.shopName.slice(-4) + '</span>';
+    document.getElementById('footerShopName').textContent = savedSettings.shopName;
+  }
+  if (savedSettings.bkashNumber) document.getElementById('bkashNum').textContent = savedSettings.bkashNumber;
+  if (savedSettings.heroTitle)   document.getElementById('heroTitle').textContent = savedSettings.heroTitle;
+  if (savedSettings.heroSubtitle) document.getElementById('heroSubtitle').textContent = savedSettings.heroSubtitle;
+}
+
+// Load products from localStorage (set by admin) or use defaults
+const storedProducts = JSON.parse(localStorage.getItem('shop_products') || 'null');
+const activeProducts = (storedProducts || PRODUCTS).filter(p => !p.status || p.status === 'active');
+
+// Render products
+const grid = document.getElementById('productsGrid');
+activeProducts.forEach(p => {
+  grid.innerHTML += `
+    <div class="product-card">
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div class="product-price">${SHOP_CONFIG.currency}${p.price} <span>BDT</span></div>
+          <button class="order-btn" onclick="openOrder(${p.id})">Order Now</button>
+        </div>
+      </div>
+    </div>
+  `;
+});
+
+let currentProduct = null;
+
+function openOrder(productId) {
+  currentProduct = activeProducts.find(p => p.id === productId);
+  const bkashNum = (savedSettings && savedSettings.bkashNumber) || SHOP_CONFIG.bkashNumber;
+
+  document.getElementById('selectedProductInfo').innerHTML = `
+    <div class="selected-product-emoji">${currentProduct.emoji}</div>
+    <div>
+      <div class="selected-product-name">${currentProduct.name}</div>
+      <div class="selected-product-price">${SHOP_CONFIG.currency}${currentProduct.price}</div>
+    </div>
+  `;
+  document.getElementById('payAmount').textContent = SHOP_CONFIG.currency + currentProduct.price;
+  document.getElementById('bkashNum').textContent = bkashNum;
+
+  // Reset form
+  document.getElementById('orderForm').style.display = 'block';
+  document.getElementById('successScreen').classList.remove('show');
+  ['custName','custPhone','custAddress','txnId','custNote'].forEach(id => document.getElementById(id).value = '');
+  setSubmitLoading(false);
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function setSubmitLoading(loading) {
+  const btn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('submitBtnText');
+  btn.disabled = loading;
+  spinner.classList.toggle('show', loading);
+  btnText.textContent = loading ? 'Submitting...' : '✓ Confirm Order';
+}
+
+async function submitOrder() {
+  const name    = document.getElementById('custName').value.trim();
+  const phone   = document.getElementById('custPhone').value.trim();
+  const txn     = document.getElementById('txnId').value.trim();
+  const address = document.getElementById('custAddress').value.trim();
+  const note    = document.getElementById('custNote').value.trim();
+
+  if (!name)  { alert('Please enter your name.');                return; }
+  if (!phone) { alert('Please enter your phone number.');        return; }
+  if (!txn)   { alert('Please enter your bKash Transaction ID.'); return; }
+
+  const orderId = 'ORD-' + Date.now();
+  const orderDate = new Date().toLocaleString('en-BD');
+
+  const payload = {
+    _subject:      `New Order: ${orderId} — ${currentProduct.name}`,
+    order_id:      orderId,
+    order_date:    orderDate,
+    product:       currentProduct.name,
+    amount:        SHOP_CONFIG.currency + currentProduct.price + ' BDT',
+    customer_name: name,
+    phone:         phone,
+    address:       address || '—',
+    bkash_txn_id:  txn,
+    note:          note || '—',
+    status:        'Pending'
+  };
+
+  setSubmitLoading(true);
+
+  try {
+    const res = await fetch(SHOP_CONFIG.formspreeUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      // Also save locally for admin panel view
+      const orders = JSON.parse(localStorage.getItem('shop_orders') || '[]');
+      orders.unshift({
+        id: orderId, date: orderDate,
+        product: currentProduct.name, price: currentProduct.price,
+        customerName: name, customerPhone: phone,
+        address, txnId: txn, note, status: 'Pending'
+      });
+      localStorage.setItem('shop_orders', JSON.stringify(orders));
+
+      document.getElementById('orderIdDisplay').textContent = '🔖 ' + orderId;
+      document.getElementById('orderForm').style.display = 'none';
+      document.getElementById('successScreen').classList.add('show');
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert('Submission failed: ' + (data.error || 'Please try again.'));
+      setSubmitLoading(false);
+    }
+  } catch (err) {
+    alert('Network error. Please check your connection and try again.');
+    setSubmitLoading(false);
+  }
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
