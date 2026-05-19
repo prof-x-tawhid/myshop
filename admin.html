@@ -532,3 +532,72 @@ function deleteProduct(productId) {
 
 // ── PHOTO UPLOAD ──
 function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // localStorage has a strict ~5MB total limit per website.
+  // We restrict image sizes to 1MB to prevent running out of storage.
+  if (file.size > 1024 * 1024) {
+    alert("This image is too large! Please upload a file smaller than 1MB.");
+    event.target.value = ''; // Reset file input
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    selectedPhoto = e.target.result; // Saves image as a Base64 string
+    
+    // Update the Admin UI preview panels
+    document.getElementById('photoPreview').src = selectedPhoto;
+    document.getElementById('photoPreview').classList.add('show');
+    document.getElementById('photoPlaceholder').style.display = 'none';
+    document.getElementById('removePhotoBtn').classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(event) {
+  if (event) event.stopPropagation(); // Prevents refiring file select window
+  
+  selectedPhoto = null;
+  document.getElementById('photoInput').value = ''; 
+  document.getElementById('photoPreview').src = '';
+  document.getElementById('photoPreview').classList.remove('show');
+  document.getElementById('photoPlaceholder').style.display = 'block';
+  document.getElementById('removePhotoBtn').classList.remove('show');
+}
+
+function resetPhotoUpload(imageUrl) {
+  selectedPhoto = imageUrl || null;
+  document.getElementById('photoInput').value = '';
+
+  if (selectedPhoto) {
+    document.getElementById('photoPreview').src = selectedPhoto;
+    document.getElementById('photoPreview').classList.add('show');
+    document.getElementById('photoPlaceholder').style.display = 'none';
+    document.getElementById('removePhotoBtn').classList.add('show');
+  } else {
+    document.getElementById('photoPreview').src = '';
+    document.getElementById('photoPreview').classList.remove('show');
+    document.getElementById('photoPlaceholder').style.display = 'block';
+    document.getElementById('removePhotoBtn').classList.remove('show');
+  }
+}
+
+// ── EMOJI PICKER FUNCTIONS ──
+// These were also referenced in your modal logic but missing from the script block
+function buildEmojiPicker() {
+  const picker = document.getElementById('emojiPicker');
+  if (!picker) return;
+  picker.innerHTML = EMOJIS.map(emoji =>
+    `<div class="emoji-option ${emoji === selectedEmoji ? 'selected' : ''}" onclick="selectEmoji('${emoji}')">${emoji}</div>`
+  ).join('');
+}
+
+function selectEmoji(emoji) {
+  selectedEmoji = emoji;
+  document.getElementById('selectedEmojiPreview').textContent = emoji;
+  document.querySelectorAll('.emoji-option').forEach(el => {
+    el.classList.toggle('selected', el.textContent === emoji);
+  });
+}
