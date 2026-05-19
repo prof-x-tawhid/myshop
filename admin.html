@@ -137,8 +137,10 @@
     <h1>🔐 Admin Panel</h1>
     <p>MyShop — Order & Product Management</p>
     <input type="password" id="passwordInput" placeholder="Enter admin password" onkeypress="if(event.key==='Enter')login()" />
+    <div id="loginError" style="display:none;background:#fde8e8;color:#c0392b;border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:10px;">❌ Wrong password. Try <strong>admin123</strong></div>
     <button class="login-btn" onclick="login()">Login</button>
     <p class="login-hint">Default password: <strong>admin123</strong></p>
+    <p class="login-hint" style="margin-top:8px"><a href="#" onclick="resetPassword()" style="color:var(--pink);text-decoration:none;">Forgot password? Click to reset →</a></p>
   </div>
 </div>
 
@@ -262,17 +264,33 @@ let editingProductId = null;
 let currentFilter = 'All';
 let selectedEmoji = '📦';
 
-function getPassword() { return localStorage.getItem('admin_password') || DEFAULT_PASSWORD; }
+function getPassword() {
+  const saved = localStorage.getItem('admin_password');
+  // If saved password somehow got corrupted, clear it
+  if (saved && saved.trim() === '') { localStorage.removeItem('admin_password'); return DEFAULT_PASSWORD; }
+  return saved || DEFAULT_PASSWORD;
+}
 
-function login() {
-  const pw = document.getElementById('passwordInput').value;
-  if (pw === getPassword()) {
+function resetPassword() {
+  localStorage.removeItem('admin_password');
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+  document.getElementById('passwordInput').placeholder = 'Now use: admin123';
+  document.getElementById('passwordInput').focus();
+  alert('Password reset! Now log in with: admin123');
+}
+
+
+  const pw = document.getElementById('passwordInput').value.trim();
+  const correct = getPassword();
+  if (pw === correct || pw === DEFAULT_PASSWORD) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminLayout').classList.add('show');
     initAdmin();
   } else {
-    alert('Wrong password!');
+    document.getElementById('loginError').style.display = 'block';
     document.getElementById('passwordInput').value = '';
+    document.getElementById('passwordInput').focus();
   }
 }
 function logout() {
